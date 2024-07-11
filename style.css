@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    justify-content: space-between; /* This will create equal spacing between columns */
+    gap: 2%;
+}
+.column {
+    flex: 1; /* Each column will take equal space */
+    padding: 10px;
+    border: 1px solid #ccc;
+
+}
