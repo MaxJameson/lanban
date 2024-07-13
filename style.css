@@ -1,11 +1,94 @@
+
+body{
+    background-color:#000000;
+    padding:20px;
+    margin:0;
+    font-family: Arial, sans-serif;
+    color: #ffffff; /* Default text color */
+    }
+
 .container {
     display: flex;
     justify-content: space-between; /* This will create equal spacing between columns */
+    background-color:black;
     gap: 2%;
+    padding-bottom: 1%
 }
 .column {
     flex: 1; /* Each column will take equal space */
     padding: 10px;
-    border: 1px solid #ccc;
-
+    border: 1px solid #242325;
+    background:#242325;
+    border-radius: 25px;
+    box-shadow: 5px 5px 10px black;
 }
+
+.task{
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #3e3e3f;
+    background:#3e3e3f;
+    border-radius: 25px;
+    box-shadow: 5px 5px 10px black;
+}
+
+.main{
+    color:#ffffff;
+    font-family: Segoe UI Symbol;
+    text-align: center;
+    }
+
+
+::placeholder {
+    color: rgb(255, 255, 255);
+}
+/* Define a class for the red placeholder color */
+.red-placeholder::-webkit-input-placeholder {
+    color: red;
+}
+.red-placeholder::-moz-placeholder {
+    color: red;
+}
+.red-placeholder:-ms-input-placeholder {
+    color: red;
+}
+.red-placeholder:-moz-placeholder {
+    color: red;
+}
+
+input[type=text]{
+    font-family: Segoe UI Symbol;
+    text-align: center;
+    width: 20%;
+    background-color: #303f9f;
+    color: white;
+    padding: 14px 20px;
+    margin: auto;
+    margin-bottom: 2%;
+    margin-right: 1%;
+    border: none;
+    display: inline-block;
+    border-radius: 25px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px black;
+    outline: none;
+  }
+
+  button{
+    font-family: Segoe UI Symbol;
+    width: 5;
+    background-color: #303f9f;
+    color: white;
+    padding: 14px 20px;
+    margin: auto;
+    margin-right: 1%;
+    margin-bottom: 1%;
+    border: none;
+    display: inline-block;
+    border-radius: 25px;
+    cursor: pointer;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px black;
+  }
+
+  

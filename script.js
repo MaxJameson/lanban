@@ -1,3 +1,5 @@
+cols = ["col1","col2","col3"]
+
 function allowDrop(event) {
     event.preventDefault();
 }
@@ -10,32 +12,66 @@ function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData("text/plain");
     const draggedElement = document.getElementById(data);
-    event.target.appendChild(draggedElement);
+    actualTarget = event.target
+    if (!cols.includes(event.target.id)){
+        console.log("Not main column")
+        console.log(event.target.parentNode)
+        actualTarget = event.target.parentNode 
+    }
+
+    actualTarget.appendChild(draggedElement);
 }
 
-
-function addTask(){
-    const container = document.getElementById("col1");
-    const task = document.createElement("p");
-    console.log(document.getElementById("Input").value);
-    task.textContent = document.getElementById("Input").value;
-    task.className = "draggable-item";
-    task.id = Math.floor(Math.random() * (1000 - 1) + 1).toString();
-    task.draggable = "true";
-    task.ondragstart = function(event){
+function createTask(colID){
+    const container = document.getElementById(colID);
+    const taskBox = document.createElement("div")
+    taskBox.className = "task";
+    // replaces by creating database element
+    taskBox.id = Math.floor(Math.random() * (1000 - 1) + 1).toString();
+    // then needs to assign input data to 
+    taskBox.draggable = "true";
+    taskBox.ondragstart = function(event){
         event.dataTransfer.setData("text/plain", event.target.id);
-    };
+    }
 
+    
+
+    const task = document.createElement("p");
+    task.textContent = inputBox.value;
+    
+    taskBox.appendChild(task);
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
     deleteButton.onclick = function() {
 
-        task.parentNode.removeChild(task);
+        taskBox.parentNode.removeChild(taskBox);
+    };
+    taskBox.appendChild(deleteButton);
+    
+    container.appendChild(taskBox);
+}
+
+function addTask(){
+
+    inputBox = document.getElementById("Input");
+    
+
+
+    if (inputBox.value == ""){
+        inputBox.classList.add('red-placeholder')
+        inputBox.placeholder = "Please write a task"
+    }
+    else{
+
+        createTask("col1")
+        inputBox.value = "";
+        inputBox.classList.remove('red-placeholder');
+        inputBox.placeholder = "New task";
     };
 
-    task.appendChild(deleteButton);
-    container.appendChild(task)
+
+
 }
 
 
