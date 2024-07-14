@@ -16,21 +16,67 @@ function drop(event) {
 
     // this can be better
     while (!cols.includes(actualTarget.id)){
-        console.log("Not main column")
-        console.log(actualTarget.parentNode)
-        console.log(actualTarget.parentNode.id)
         actualTarget = actualTarget.parentNode 
     }
-
+    moveColumn(data,actualTarget.id.slice(-1))
     actualTarget.appendChild(draggedElement);
 }
 
-function createTask(colID){
+
+function moveColumn(ID,column){
+    console.log(ID)
+    const moveData = new FormData();
+
+    moveData.append('id',ID);
+    moveData.append('state',column);
+    // uses fetch api to submit a php post request for the account information
+    fetch("moveTask.php", {
+        method: "post",
+        body: moveData
+    })    
+}
+
+function deleteTask(ID){
+    console.log(ID)
+    const toDelete = new FormData();
+
+    toDelete.append('id',ID);
+    // uses fetch api to submit a php post request for the account information
+    fetch("deleteTask.php", {
+        method: "post",
+        body: toDelete
+    })
+}
+
+function postTask(name,details,state){
+    // post to create a blank task
+
+    const newTask = new FormData();
+
+    newTask.append('name',name);
+    newTask.append('details',details);
+    newTask.append('state',state);
+    newTask.append('created',new Date().toJSON().slice(0, 10));
+
+    // uses fetch api to submit a php post request for the account information
+    fetch("postTask.php", {
+        method: "post",
+        body: newTask
+    }).then(function(response){
+        return response.text();
+    }).then(function(text){
+        return text
+    }).catch(function(error){
+        console.error(error);
+    })   
+}
+
+function createTask(colID,name,ID){
     const container = document.getElementById(colID);
     const taskBox = document.createElement("div")
     taskBox.className = "task";
     // replaces by creating database element
-    taskBox.id = Math.floor(Math.random() * (1000 - 1) + 1).toString();
+    taskBox.id = ID
     // then needs to assign input data to 
     taskBox.draggable = "true";
     taskBox.ondragstart = function(event){
@@ -40,34 +86,40 @@ function createTask(colID){
     
 
     const task = document.createElement("p");
-    task.textContent = inputBox.value;
+    task.textContent = name;
     
     taskBox.appendChild(task);
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
     deleteButton.onclick = function() {
-
+        deleteTask(taskBox.id)
         taskBox.parentNode.removeChild(taskBox);
     };
     taskBox.appendChild(deleteButton);
     
     container.appendChild(taskBox);
+
+
 }
+
 
 function addTask(){
 
     inputBox = document.getElementById("Input");
     
-
+    
 
     if (inputBox.value == ""){
         inputBox.classList.add('red-placeholder')
         inputBox.placeholder = "Please write a task"
     }
     else{
-
-        createTask("col1")
+        taskID = Null
+        postTask(inputBox.value,"work in progress",1).then(ID =>{
+            taskID = ID 
+        })
+        createTask("col1",inputBox.value,taskID)
         inputBox.value = "";
         inputBox.classList.remove('red-placeholder');
         inputBox.placeholder = "New task";
@@ -76,5 +128,32 @@ function addTask(){
 
 
 }
+
+async function fetchTasks(){
+   // create a form to store user ID
+ 
+    const response = await fetch('getTasks.php', {
+    
+        method: "post",
+        body: ""
+    });
+
+    if (!response.ok){
+        console.log(await response.text());
+    }
+
+    tasks = await response.json();
+    return tasks
+}
+
+fetchTasks().then(tasks =>{
+    for (task in tasks){
+        taskData = tasks[task]
+        cn = String(taskData.state)
+        createTask("col"+cn,taskData.Name,taskData.taskID)
+    }
+})
+
+
 
 
