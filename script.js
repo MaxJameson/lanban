@@ -48,7 +48,7 @@ function deleteTask(ID){
     })
 }
 
-function postTask(name,details,state){
+async function postTask(name,details,state){
     // post to create a blank task
 
     const newTask = new FormData();
@@ -59,16 +59,16 @@ function postTask(name,details,state){
     newTask.append('created',new Date().toJSON().slice(0, 10));
 
     // uses fetch api to submit a php post request for the account information
-    fetch("postTask.php", {
+    const response = await fetch("postTask.php", {
         method: "post",
         body: newTask
-    }).then(function(response){
-        return response.text();
-    }).then(function(text){
-        return text
-    }).catch(function(error){
-        console.error(error);
-    })   
+    })
+    if (!response.ok){
+        console.log(await response.text);
+    }
+
+    ID = await response.json();
+    return ID
 }
 
 function createTask(colID,name,ID){
@@ -115,14 +115,15 @@ function addTask(){
         inputBox.placeholder = "Please write a task"
     }
     else{
-        taskID = Null
-        postTask(inputBox.value,"work in progress",1).then(ID =>{
-            taskID = ID 
+        taskID = null
+        postTask(inputBox.value,"work in progress",1).then(tID =>{
+            taskID = tID
+            createTask("col1",inputBox.value,taskID)
+            inputBox.value = "";
+            inputBox.classList.remove('red-placeholder');
+            inputBox.placeholder = "New task";
         })
-        createTask("col1",inputBox.value,taskID)
-        inputBox.value = "";
-        inputBox.classList.remove('red-placeholder');
-        inputBox.placeholder = "New task";
+
     };
 
 
