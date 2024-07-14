@@ -13,10 +13,13 @@ function drop(event) {
     const data = event.dataTransfer.getData("text/plain");
     const draggedElement = document.getElementById(data);
     actualTarget = event.target
-    if (!cols.includes(event.target.id)){
+
+    // this can be better
+    while (!cols.includes(actualTarget.id)){
         console.log("Not main column")
-        console.log(event.target.parentNode)
-        actualTarget = event.target.parentNode 
+        console.log(actualTarget.parentNode)
+        console.log(actualTarget.parentNode.id)
+        actualTarget = actualTarget.parentNode 
     }
 
     actualTarget.appendChild(draggedElement);
