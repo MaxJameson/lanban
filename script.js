@@ -25,7 +25,6 @@ function drop(event) {
 
 
 function moveColumn(ID,column){
-    console.log(ID)
     const moveData = new FormData();
 
     moveData.append('id',ID);
@@ -38,7 +37,7 @@ function moveColumn(ID,column){
 }
 
 function deleteTask(ID){
-    console.log(ID)
+
     const toDelete = new FormData();
 
     toDelete.append('id',ID);
@@ -114,7 +113,6 @@ function addTask(){
     inputBox = document.getElementById("Input");
     
     
-    console.log("Creating task")
     if (inputBox.value == ""){
         inputBox.classList.add('red-placeholder')
         inputBox.placeholder = "Please write a task"
@@ -155,23 +153,32 @@ async function fetchTasks(){
 
 async function taskUpdater(){
     const oldtasks = document.querySelectorAll(".task");
-
-    oldtasks.forEach(task => {
-        console.log("Removing task")
-        task.remove();
-    });
-    console.log("Updating tasks")
+    const taskIds = Array.from(oldtasks).map(task => task.id);
     fetchTasks().then(tasks =>{
+        IDs = []
         for (task in tasks){
+
             taskData = tasks[task]
-            cn = String(taskData.state)
-            createTask("col"+cn,taskData.Name,taskData.taskID)
+            if (!taskIds.includes(taskData.taskID)){
+                cn = String(taskData.state)
+                createTask("col"+cn,taskData.Name,taskData.taskID)  
+            }
+            IDs.push(taskData.taskID)
+
         }
+        for (task in taskIds){
+            if (!IDs.includes(taskIds[task])){
+                toDel = document.getElementById(taskIds[task])
+                toDel.remove()
+            }
+
+        }
+
     })
 }
 
 taskUpdater()
-setInterval(taskUpdater, 10000);
+setInterval(taskUpdater, 5000);
 
 
 
