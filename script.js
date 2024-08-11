@@ -1,4 +1,5 @@
 cols = ["col1","col2","col3"]
+taskList = []
 
 function allowDrop(event) {
     event.preventDefault();
@@ -72,6 +73,10 @@ async function postTask(name,details,state){
 }
 
 function createTask(colID,name,ID){
+
+    const elementId = ID;
+    const element = document.getElementById(elementId);
+    
     const container = document.getElementById(colID);
     const taskBox = document.createElement("div")
     taskBox.className = "task";
@@ -109,7 +114,7 @@ function addTask(){
     inputBox = document.getElementById("Input");
     
     
-
+    console.log("Creating task")
     if (inputBox.value == ""){
         inputBox.classList.add('red-placeholder')
         inputBox.placeholder = "Please write a task"
@@ -147,13 +152,28 @@ async function fetchTasks(){
     return tasks
 }
 
-fetchTasks().then(tasks =>{
-    for (task in tasks){
-        taskData = tasks[task]
-        cn = String(taskData.state)
-        createTask("col"+cn,taskData.Name,taskData.taskID)
-    }
-})
+
+async function taskUpdater(){
+    const oldtasks = document.querySelectorAll(".task");
+
+    oldtasks.forEach(task => {
+        console.log("Removing task")
+        task.remove();
+    });
+    console.log("Updating tasks")
+    fetchTasks().then(tasks =>{
+        for (task in tasks){
+            taskData = tasks[task]
+            cn = String(taskData.state)
+            createTask("col"+cn,taskData.Name,taskData.taskID)
+        }
+    })
+}
+
+taskUpdater()
+setInterval(taskUpdater, 10000);
+
+
 
 
 
